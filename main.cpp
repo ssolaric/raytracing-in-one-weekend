@@ -8,12 +8,28 @@
 #include "hitable_list.h"
 #include "camera.h"
 
+vec3 random_in_unit_sphere() {
+    vec3 p;
+    do {
+        p = 2.0 * vec3(drand48(), drand48(), drand48()) - vec3(1, 1, 1);
+    }
+    while (p.squared_length() >= 1.0);
+    return p;
+}
+
 // Para visualizar las normales, se mapea cada componente  al intervalo [0, 1] (normalizar) y luego
 // se mapea (x, y, z) a (r, g, b).
 vec3 color(const ray& r, hitable* world) {
     hit_record rec;
-    if (world->hit(r, 0.0f, FLT_MAX, rec)) {
-        return 0.5 * vec3(rec.normal.x() + 1, rec.normal.y() + 1, rec.normal.z() + 1);
+    if (world->hit(r, 0.001f, FLT_MAX, rec)) {
+        // Sobre el punto de choque entre el rayo y la esfera, se ubica una esfera imaginaria de radio 1.
+        // Esta esfera tiene como centro p + N, donde N es el vector normal al punto de choque.
+        // Se elige un punto S aleatorio dentro de la esfera unitaria imaginaria.
+
+        // Se envía un rayo desde p hasta el punto S
+        vec3 target = rec.p + rec.normal + random_in_unit_sphere(); // punto S
+        // Absorber 50% de la energía en cada rebote
+        return 0.5 * color(ray(rec.p, target - rec.p), world); // ¡Es recursivo!
     }
     else {
         vec3 unit_direction = unit_vector(r.direction());
@@ -54,6 +70,8 @@ int main() {
                 col += color(r, world);
             }
             col /= float(ns);
+            // Corrección gamma 2
+            col = vec3(std::sqrt(col[0]), std::sqrt(col[1]), std::sqrt(col[2]));
             int ir = int(255.99 * col[0]);
             int ig = int(255.99 * col[1]);
             int ib = int(255.99 * col[2]);
