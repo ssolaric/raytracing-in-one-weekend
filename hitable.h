@@ -5,6 +5,8 @@
 #ifndef RAYTRACING_IN_A_WEEKEND_HITABLE_H
 #define RAYTRACING_IN_A_WEEKEND_HITABLE_H
 
+class material;
+
 #include "vec3.h"
 #include "ray.h"
 #include "material.h"
