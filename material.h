@@ -12,6 +12,13 @@ struct hit_record;
 
 #include <cmath>
 
+// Reflectividad de Schlick, es una aproximación a la cantidad de luz refleja un vidrio, la cual es
+// dependiente del ángulo con que se le mire.
+float schlick(float cosine, float ref_idx) {
+    float r0 = (1 - ref_idx) / (1 + ref_idx);
+    r0 = r0 * r0;
+    return r0 + (1 - r0) * std::pow(1 - cosine, 5.0f);
+}
 
 bool refract(const vec3& v, const vec3& n, float ni_over_nt, vec3& refracted) {
     vec3 uv = unit_vector(v);
