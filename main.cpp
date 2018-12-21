@@ -46,12 +46,15 @@ int main() {
     // El origen es la esquina inferior izquierda de la pantalla.
     vec3 origin(0.0, 0.0, 0.0);
 
-    hitable* list[4];
+    hitable* list[5];
     list[0] = new sphere(vec3(0, 0, -1), 0.5, new lambertian(vec3(0.1, 0.2, 0.5)));
     list[1] = new sphere(vec3(0, -100.5, -1), 100, new lambertian(vec3(0.8, 0.8, 0.0)));
     list[2] = new sphere(vec3(1, 0, -1), 0.5, new metal(vec3(0.8, 0.6, 0.2)));
     list[3] = new sphere(vec3(-1, 0, -1), 0.5, new dielectric(1.5));
-    hitable* world = new hitable_list(list, 4);
+    // Si se usa un radio negativo, las normales apuntan hacia adentro, es decir, se puede usar
+    // como una burbuja para mostrar una esfera hueca de vidrio.
+    list[4] = new sphere(vec3(-1, 0, -1), -0.45, new dielectric(1.5));
+    hitable* world = new hitable_list(list, 5);
     camera cam;
     // Estos for recorren la imagen de tal forma que los ejes coordenados X e Y empiezan en la esquina
     // inferior derecha y apuntan hacia la derecha y hacia arriba, respectivamente.
