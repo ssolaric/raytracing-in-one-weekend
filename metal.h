@@ -10,7 +10,7 @@
 
 class metal: public material {
 public:
-    metal(const vec3& a): albedo(a) {}
+    explicit metal(const vec3& a): albedo(a) {}
 
     bool scatter(const ray& r_in, const hit_record& rec, vec3& attenuation, ray& scattered) const override {
         vec3 reflected = reflect(unit_vector(r_in.direction()), rec.normal);
