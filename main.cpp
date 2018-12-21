@@ -58,7 +58,13 @@ int main() {
     // como una burbuja para mostrar una esfera hueca de vidrio.
     list[4] = new sphere(vec3(-1, 0, -1), -0.45, new dielectric(1.5));
     hitable* world = new hitable_list(list, 5);
-    camera cam(vec3(-2, 2, 1), vec3(0, 0, -1), vec3(0, 1, 0), 90, float(nx) / float(ny));
+
+
+    vec3 lookfrom(3, 3, 2);
+    vec3 lookat(0, 0, -1);
+    float dist_to_focus = (lookfrom - lookat).length();
+    float aperture = 2.0;
+    camera cam(lookfrom, lookat, vec3(0, 1, 0), 20, float(nx) / float(ny), aperture, dist_to_focus);
     // Estos for recorren la imagen de tal forma que los ejes coordenados X e Y empiezan en la esquina
     // inferior derecha y apuntan hacia la derecha y hacia arriba, respectivamente.
     for (int j = ny - 1; j >= 0; j--) {
